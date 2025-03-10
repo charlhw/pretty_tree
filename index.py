@@ -56,11 +56,17 @@ def print_directory_tree(path, prefix=""):
                 print(prefix + "📁 " + os.path.basename(path) + "/")
                 prefix += "    "
                 for item in os.listdir(path):
-                    print_directory_tree(os.path.join(path, item), prefix)
+                    item_path = os.path.join(path, item)
+                    if os.path.exists(item_path):
+                        print_directory_tree(item_path, prefix)
+                    else:
+                        print(prefix + "[Path Not Found]")
         else:
             print(prefix + "📄 " + os.path.basename(path))
     except PermissionError:
         print(prefix + "[Permission Denied]")
+    except FileNotFoundError:
+        print(prefix + "[File Not Found]")
 
 def is_hidden(filepath):
     return bool(os.stat(filepath).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN)
